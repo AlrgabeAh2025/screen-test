@@ -1,65 +1,40 @@
-from flet import *
-import time
-import pyscreenshot as ImageGrab
+import flet as ft
 
 
+def main(page: ft.Page):
+    page.scroll = ft.ScrollMode.ADAPTIVE
+    page.appbar = ft.AppBar(title=ft.Text("PermissionHandler Tests"))
+    ph = ft.PermissionHandler()
+    page.overlay.append(ph)
 
-def main(page:Page):
+    def check_permission(e):
+        o = ph.check_permission(e.control.data)
+        page.add(ft.Text(f"Checked {e.control.data.name}: {o}"))
 
-	def myscreenshoot(e):
-		page = e.control.page
-		y = page.window_top
-		x = page.window_left
-		w = page.window_width
-		h = page.window_height
+    def request_permission(e):
+        o = ph.request_permission(e.control.data)
+        page.add(ft.Text(f"Requested {e.control.data.name}: {o}"))
 
-		# PROCESS SCREESHOT
-		screen = ImageGrab.grab(
-		# AREA FOR YOU SCREENSHOT
-			bbox =(100,100,100+100,100+100) 
-			)
-		# GET TIME FOR NAME YOU FILE UPLOAD
-		t = str(time.time())
-		myimagelocation = f"assets/{t.split('.')[0]}.png"
-		screen.save(myimagelocation)
+    def open_app_settings(e):
+        o = ph.open_app_settings()
+        page.add(ft.Text(f"App Settings: {o}"))
 
-		# load YOU IIMAGE
-		loadimage = Image(src=myimagelocation,fit="contain")
-
-		# PREVIEW IN YOU SCREEN IF SUCCESS SCRENSHOT
-		if len(ImageContainer.controls) >= 1:
-			ImageContainer.clean()
-
-		# PUSH TO COLUMN
-		ImageContainer.controls.append(loadimage)
-		page.update()
-
-	btn = ElevatedButton("screenshoot",
-		on_click=myscreenshoot
-
-		)
-	txtinput = TextField("")
-
-	ImageContainer = Column()
-
-	page.add(
-		Column([
-			Row([
-				txtinput,
-				btn
-				]),
-		Text("You screenshot image result",
-			size=30,
-			weight="bold"
-
-			),
-		ImageContainer
-
-			])
-
-		)
+    page.add(
+        ft.OutlinedButton(
+            "Check Microphone Permission",
+            data=ft.PermissionType.STORAGE,
+            on_click=check_permission,
+        ),
+        ft.OutlinedButton(
+            "Request Microphone Permission",
+            data=ft.PermissionType.STORAGE,
+            on_click=request_permission,
+        ),
+        ft.OutlinedButton(
+            "Open App Settings",
+            on_click=open_app_settings,
+        ),
+    )
 
 
-
-app(target=main,assets_dir="assets")
-
+ft.app(main)
