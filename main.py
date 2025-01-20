@@ -16,7 +16,7 @@ def main(page:Page):
 		# PROCESS SCREESHOT
 		screen = ImageGrab.grab(
 		# AREA FOR YOU SCREENSHOT
-			bbox =(x,y,w+x,h+y) 
+			bbox =(100,100,100+100,100+100) 
 			)
 		# GET TIME FOR NAME YOU FILE UPLOAD
 		t = str(time.time())
